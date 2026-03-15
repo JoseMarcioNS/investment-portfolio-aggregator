@@ -1,8 +1,12 @@
+using InvestmentPortfolio.Domain.Events;
+
 namespace InvestmentPortfolio.Domain.Entities;
 
 public abstract class Entity
 {
     public Guid Id { get; protected set; }
+
+    private readonly List<DomainEvent> _domainEvents = new();
 
     protected Entity()
     {
@@ -15,6 +19,18 @@ public abstract class Entity
             throw new ArgumentException("The id cannot be empty.", nameof(id));
 
         Id = id;
+    }
+
+    public IReadOnlyCollection<DomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+
+    protected void AddDomainEvent(DomainEvent domainEvent)
+    {
+        _domainEvents.Add(domainEvent);
+    }
+
+    public void ClearDomainEvents()
+    {
+        _domainEvents.Clear();
     }
 
     public override bool Equals(object? obj)
