@@ -3,6 +3,9 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# Personal learning notes (not shared publicly)
+docs/learning-notes.md
+
 # dotenv files
 .env
 
