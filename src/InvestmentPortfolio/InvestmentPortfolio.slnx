@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/InvestmentPortfolio.Api/InvestmentPortfolio.Api.csproj" />
+    <Project Path="src/InvestmentPortfolio.Application/InvestmentPortfolio.Application.csproj" />
+    <Project Path="src/InvestmentPortfolio.Domain/InvestmentPortfolio.Domain.csproj" />
+    <Project Path="src/InvestmentPortfolio.EventStore/InvestmentPortfolio.EventStore.csproj" />
+    <Project Path="src/InvestmentPortfolio.Infrastructure/InvestmentPortfolio.Infrastructure.csproj" />
+    <Project Path="src/InvestmentPortfolio.ReadModel/InvestmentPortfolio.ReadModel.csproj" />
+    <Project Path="src/InvestmentPortfolio.Workers/InvestmentPortfolio.Workers.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/InvestmentPortfolio.Application.Tests/InvestmentPortfolio.Application.Tests.csproj" />
+    <Project Path="tests/InvestmentPortfolio.Domain.Tests/InvestmentPortfolio.Domain.Tests.csproj" />
+  </Folder>
+</Solution>
