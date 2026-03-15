@@ -33,7 +33,7 @@ Dependency rules:
 ---
 
 ## TASK-002 - Criar Value Objects do dominio com TDD
-**Status:** [ ] To Do
+**Status:** [x] Done
 **Goal:** Modelar conceitos imutaveis do dominio como Value Objects.
 
 Value Objects:
@@ -48,7 +48,7 @@ Ciclo TDD (Red -> Green -> Refactor) para cada Value Object.
 ---
 
 ## TASK-003 - Criar Entidades do dominio com TDD
-**Status:** [ ] To Do
+**Status:** [~] In Progress
 **Goal:** Implementar as entidades core do dominio.
 
 Entities:
