@@ -187,3 +187,94 @@ Duas Transactions com mesmo valor mas IDs diferentes sao **diferentes** — sao 
 - 'O que e um Value Object em DDD?'
 - 'Por que Value Objects devem ser imutaveis?'
 - 'Como implementar igualdade por valor em C#?' (record ou override Equals/GetHashCode)
+
+---
+
+## 8. Entidades do Dominio — Identity, Encapsulamento e Logica de Negocio
+
+### O que diferencia uma Entidade de um Value Object?
+
+Uma **Entidade** tem **identidade** — mesmo que dois objetos tenham as mesmas propriedades, se tem IDs diferentes, sao objetos diferentes.
+
+```csharp
+var transaction1 = new Transaction(id: 1, asset: "PETR4", quantity: 100);
+var transaction2 = new Transaction(id: 2, asset: "PETR4", quantity: 100);
+
+transaction1 != transaction2  // IDs diferentes = objetos diferentes
+```
+
+Ja dois `Money(100, "BRL")` sao sempre iguais — nao tem ID, a identidade e o proprio valor.
+
+### Por que criar uma classe `Entity` base?
+
+Para centralizar a logica de igualdade por ID em um lugar so. Todas as entidades herdam e ganham:
+- `Equals` que compara por ID
+- `GetHashCode` baseado no ID
+- `operator ==` e `operator !=`
+
+Isso evita duplicacao e garante consistencia.
+
+**O que cai em entrevista:**
+- 'Como voce implementa igualdade em entidades?' — por ID, nunca por propriedades
+- 'Por que override GetHashCode quando override Equals?' — contrato do .NET, senao Dictionary/HashSet quebram
+
+### Encapsulamento — Por que `private set`?
+
+```csharp
+public Quantity Quantity { get; private set; }  // ✅ BOM
+public Quantity Quantity { get; set; }          // ❌ RUIM
+```
+
+`private set` garante que so a propria classe pode mudar o estado. Se fosse `public set`, qualquer um poderia fazer:
+```csharp
+position.Quantity = new Quantity(-100);  // quebra invariante!
+```
+
+Com `private set`, a unica forma de mudar e via metodos controlados:
+```csharp
+position.Apply(transaction);  // valida regras antes de mudar
+```
+
+**O que cai em entrevista:**
+- 'O que e encapsulamento?' — esconder detalhes de implementacao, controlar acesso ao estado
+- 'Qual a diferenca entre `private`, `protected` e `internal`?' — visibilidade
+
+### Position.Apply() — Logica de Negocio no Domain
+
+A logica de calculo de **preco medio** esta na entidade `Position`:
+
+```csharp
+// Compra 1: 100 acoes a R$ 30 = R$ 3.000
+// Compra 2: 50 acoes a R$ 40  = R$ 2.000
+// Total: 150 acoes, investimento total: R$ 5.000
+// Preco medio = R$ 5.000 / 150 = R$ 33,33
+```
+
+Isso e DDD puro: a regra de negocio esta **dentro da entidade**, nao espalhada em services ou controllers.
+
+**O que cai em entrevista:**
+- 'Onde fica a logica de negocio em Clean Architecture?' — no Domain (entidades + VOs)
+- 'O que e um Anemic Domain Model?' — entidades so com getters/setters, sem comportamento (antipattern)
+- 'Quando usar um Domain Service em vez de colocar logica na entidade?' — quando a operacao envolve multiplas entidades ou nao pertence claramente a uma
+
+### IReadOnlyCollection — Expor sem permitir modificacao
+
+```csharp
+private readonly List<Position> _positions = [];
+public IReadOnlyCollection<Position> Positions => _positions.AsReadOnly();
+```
+
+Isso impede que codigo externo faca:
+```csharp
+portfolio.Positions.Add(new Position(...));  // ❌ nao compila
+```
+
+A unica forma de adicionar e via metodo controlado:
+```csharp
+portfolio.AddPosition(position);  // ✅ valida regras antes
+```
+
+**O que cai em entrevista:**
+- 'Como expor uma colecao protegendo o encapsulamento?' — `IReadOnlyCollection` ou retornar copia
+- 'Qual a diferenca entre `IEnumerable`, `ICollection` e `IReadOnlyCollection`?'
+
