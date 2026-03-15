@@ -2,6 +2,26 @@
 
 ---
 
+## ADR-008 - CI/CD: GitHub Actions
+**Data:** 2026-03-15
+**Status:** Accepted
+
+### Contexto
+Todo PR precisa ser validado automaticamente antes do merge para garantir que build e testes passam.
+
+### Decisao
+Usar GitHub Actions com dois workflows:
+- ci.yml: roda em todo PR e push — restore, build, test com coverage
+- cd.yml: sera adicionado quando houver infraestrutura (TASK-007+)
+
+### Consequencias
++ PRs bloqueados automaticamente se build ou testes falharem
++ Coverage report visivel no PR
++ Gratuito para repositorios publicos
+- CD sera implementado em task futura
+
+---
+
 ## ADR-007 - Git Strategy: GitHub Flow + Conventional Commits
 **Data:** 2026-03-15
 **Status:** Accepted
